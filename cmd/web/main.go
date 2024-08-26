@@ -21,7 +21,7 @@ func main() {
 	port := ":5174"
 	mux := http.NewServeMux()
 
-	db, err := openDB("/data/sqlite.db")
+	db, err := openDB("./data/sqlite.db")
 	if err != nil {
 		log.Fatal(err)
 	}
