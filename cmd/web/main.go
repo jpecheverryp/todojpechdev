@@ -42,21 +42,21 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
-    err := r.ParseForm()
-    if err!=nil{
-        http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-        return
-    }
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
 
-    newTodoDescription := r.PostForm.Get("new-todo")
-    todo, err := app.Store.Todo.Insert(newTodoDescription)
-    log.Print(todo)
-    if err!=nil{
-        http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-        return
-    }
-    
-    http.Redirect(w, r, "/", http.StatusSeeOther)
+	newTodoDescription := r.PostForm.Get("new-todo")
+	todo, err := app.Store.Todo.Insert(newTodoDescription)
+	log.Print(todo)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func main() {
