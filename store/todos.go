@@ -19,7 +19,7 @@ type TodoStore struct {
 func (s *TodoStore) Insert(description string) (Todo, error) {
 	stmt := `INSERT into todos (description) VALUES (?) RETURNING id, created_at, description, is_done`
 
-    var t Todo
+	var t Todo
 
 	err := s.DB.QueryRow(stmt, description).Scan(&t.ID, &t.CreatedAt, &t.Description, &t.IsDone)
 
@@ -28,4 +28,33 @@ func (s *TodoStore) Insert(description string) (Todo, error) {
 	}
 
 	return t, nil
+}
+
+func (s *TodoStore) GetAll() ([]Todo, error) {
+	stmt := `SELECT id, created_at, description, is_done FROM todos`
+
+	var todos = []Todo{}
+
+	rows, err := s.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var t Todo
+
+		err := rows.Scan(&t.ID, &t.CreatedAt, &t.Description, &t.IsDone)
+		if err != nil {
+			return nil, err
+		}
+		todos = append(todos, t)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return todos, nil
 }

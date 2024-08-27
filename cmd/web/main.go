@@ -15,6 +15,14 @@ type application struct {
 }
 
 func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
+
+	todos, err := app.Store.Todo.GetAll()
+	if err != nil {
+		log.Print(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
 	files := []string{
 		"./views/index.html",
 	}
@@ -26,11 +34,29 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ts.ExecuteTemplate(w, "index", nil)
+	err = ts.ExecuteTemplate(w, "index", todos)
 	if err != nil {
 		log.Print(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
+}
+
+func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
+    err := r.ParseForm()
+    if err!=nil{
+        http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+        return
+    }
+
+    newTodoDescription := r.PostForm.Get("new-todo")
+    todo, err := app.Store.Todo.Insert(newTodoDescription)
+    log.Print(todo)
+    if err!=nil{
+        http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+        return
+    }
+    
+    http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func main() {
@@ -47,6 +73,7 @@ func main() {
 	}
 
 	mux.HandleFunc("/", app.getIndex)
+	mux.HandleFunc("POST /todo", app.createTodo)
 
 	log.Printf("starting server in port: %s", port)
 	log.Fatal(http.ListenAndServe(port, mux))
