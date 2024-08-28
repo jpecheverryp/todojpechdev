@@ -87,11 +87,11 @@ func main() {
 		Store: store.NewStore(db),
 	}
 
-    fileServer := http.FileServer(http.Dir("./views/static/"))
-
+    fileServer := http.FileServer(http.Dir("./static/"))
     mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
+	//mux.Handle("GET /static/", http.FileServerFS(static.Files))
 
-	mux.HandleFunc("/", app.getIndex)
+	mux.HandleFunc("GET /", app.getIndex)
 	mux.HandleFunc("POST /todo", app.createTodo)
 
 	log.Printf("starting server in port: %s", port)

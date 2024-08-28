@@ -6,15 +6,21 @@
     <title>To-Do App</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/tailwind.css" />
 </head>
 
 <body>
-    <h1>To-Do App</h1>
+    <h1 class="text-5xl text-center mt-6 mb-10 uppercase font-medium">To-Do App</h1>
     <form hx-post="/todo" hx-target="#todo-list" hx-swap="afterbegin">
-        <input type="text" name="new-todo" value="">
-        <button type="submit">Add</button>
+        <div class="w-full max-w-xs mx-auto flex mb-10">
+            <input type="text" placeholder="..." name="new-todo"
+                class="flex w-full h-10 px-3 py-2 text-sm bg-white border rounded-md border-neutral-300 ring-offset-background placeholder:text-neutral-500 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50" />
+            <button
+                class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-neutral-950 hover:bg-neutral-900 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 focus:shadow-outline focus:outline-none"
+                type="submit">Add</button>
+        </div>
     </form>
-    <ul id="todo-list">
+    <ul id="todo-list" class="text-center">
         {{ range . }}
         {{ block "todo" . }}
         <li>{{ .ID }} - {{ .Description }} - {{ .IsDone }} - CreatedAt: {{ .CreatedAt }}</li>
@@ -24,5 +30,6 @@
 </body>
 
 <script src="/static/js/htmx.min.js"></script>
+
 </html>
 {{ end }}
