@@ -56,7 +56,22 @@ func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	files := []string{
+		"./views/index.html",
+	}
+
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		log.Print(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	err = ts.ExecuteTemplate(w, "todo", todo)
+	if err != nil {
+		log.Print(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
 func main() {
@@ -71,6 +86,10 @@ func main() {
 	app := &application{
 		Store: store.NewStore(db),
 	}
+
+    fileServer := http.FileServer(http.Dir("./views/static/"))
+
+    mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 
 	mux.HandleFunc("/", app.getIndex)
 	mux.HandleFunc("POST /todo", app.createTodo)

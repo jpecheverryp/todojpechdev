@@ -10,16 +10,19 @@
 
 <body>
     <h1>To-Do App</h1>
-    <form method="POST" action="/todo">
+    <form hx-post="/todo" hx-target="#todo-list" hx-swap="afterbegin">
         <input type="text" name="new-todo" value="">
         <button type="submit">Add</button>
     </form>
-    <ul>
+    <ul id="todo-list">
         {{ range . }}
+        {{ block "todo" . }}
         <li>{{ .ID }} - {{ .Description }} - {{ .IsDone }} - CreatedAt: {{ .CreatedAt }}</li>
+        {{ end }}
         {{ end }}
     </ul>
 </body>
 
+<script src="/static/js/htmx.min.js"></script>
 </html>
 {{ end }}
