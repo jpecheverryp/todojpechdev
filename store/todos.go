@@ -31,7 +31,7 @@ func (s *TodoStore) Insert(description string) (Todo, error) {
 }
 
 func (s *TodoStore) GetAll() ([]Todo, error) {
-	stmt := `SELECT id, created_at, description, is_done FROM todos`
+	stmt := `SELECT id, created_at, description, is_done FROM todos ORDER BY created_at DESC`
 
 	var todos = []Todo{}
 
