@@ -87,8 +87,8 @@ func main() {
 		Store: store.NewStore(db),
 	}
 
-    fileServer := http.FileServer(http.Dir("./static/"))
-    mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
+	fileServer := http.FileServer(http.Dir("./static/"))
+	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
 	//mux.Handle("GET /static/", http.FileServerFS(static.Files))
 
 	mux.HandleFunc("GET /", app.getIndex)

@@ -11,7 +11,8 @@
 
 <body>
     <h1 class="text-5xl text-center mt-6 mb-10 uppercase font-medium">To-Do App</h1>
-    <form hx-post="/todo" hx-target="#todo-list" hx-swap="afterbegin" hx-push-url="false" hx-on::after-request="this.reset()">
+    <form hx-post="/todo" hx-target="#todo-list" hx-swap="afterbegin" hx-push-url="false"
+        hx-on::after-request="this.reset()">
         <div class="w-full max-w-xs mx-auto flex mb-10">
             <input type="text" placeholder="..." name="new-todo"
                 class="flex w-full h-10 px-3 py-2 text-sm bg-white border rounded-md border-neutral-300 ring-offset-background placeholder:text-neutral-500 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50" />
@@ -20,10 +21,18 @@
                 type="submit">Add</button>
         </div>
     </form>
-    <ul id="todo-list" class="text-center">
+    <ul id="todo-list" class="flex flex-col items-center">
         {{ range . }}
         {{ block "todo" . }}
-        <li>{{ .ID }} - {{ .Description }} - {{ .IsDone }} - CreatedAt: {{ .CreatedAt }}</li>
+        <li>
+            <div id="todo-{{.ID}}" class="flex items-center mb-3">
+                <input id="checkbox-todo-{{.ID}}" type="checkbox"
+                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-neutral-900 focus:ring-neutral-900" {{ if
+                    .IsDone }}checked{{end}}>
+                <label for="checkbox-todo-{{.ID}}" class="ml-2 font-medium text-gray-900">{{.Description}} -
+                    {{.CreatedAt}}</label>
+            </div>
+        </li>
         {{ end }}
         {{ end }}
     </ul>
