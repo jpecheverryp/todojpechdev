@@ -58,3 +58,22 @@ func (s *TodoStore) GetAll() ([]Todo, error) {
 
 	return todos, nil
 }
+
+func (s *TodoStore) Switch(id int) error {
+	stmt := `SELECT is_done FROM todos WHERE id = ?`
+
+	var is_Done bool
+	err := s.DB.QueryRow(stmt, id).Scan(&is_Done)
+	if err != nil {
+		return err
+	}
+	newValue := !is_Done
+
+	stmt2 := `UPDATE todos SET is_done = ? WHERE id = ?`
+	_, err = s.DB.Exec(stmt2, newValue, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

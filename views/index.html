@@ -26,7 +26,7 @@
         {{ block "todo" . }}
         <li>
             <div id="todo-{{.ID}}" class="flex items-center mb-3">
-                <input id="checkbox-todo-{{.ID}}" type="checkbox"
+                <input hx-put="/switch-todo/{{.ID}}" id="checkbox-todo-{{.ID}}" type="checkbox"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-neutral-900 focus:ring-neutral-900" {{ if
                     .IsDone }}checked{{end}}>
                 <label for="checkbox-todo-{{.ID}}" class="ml-2 font-medium text-gray-900">{{.Description}} -
