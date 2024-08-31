@@ -9,7 +9,6 @@ audit:
 ## dev: run application in developent mode
 .PHONY: dev
 dev:
-	npm run build
 	go run ./cmd/web/
 
 ## build: build production binary
