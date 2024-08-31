@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"html/template"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 	"strconv"
 
 	_ "modernc.org/sqlite"
@@ -12,12 +14,13 @@ import (
 )
 
 type application struct {
-	Store store.Store
+    logger *slog.Logger
+	store store.Store
 }
 
 func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 
-	todos, err := app.Store.Todo.GetAll()
+	todos, err := app.store.Todo.GetAll()
 	if err != nil {
 		log.Print(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -50,7 +53,7 @@ func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newTodoDescription := r.PostForm.Get("new-todo")
-	todo, err := app.Store.Todo.Insert(newTodoDescription)
+	todo, err := app.store.Todo.Insert(newTodoDescription)
 	log.Print(todo)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -82,7 +85,7 @@ func (app *application) switchTodo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	err = app.Store.Todo.Switch(id)
+	err = app.store.Todo.Switch(id)
 	if err != nil {
 		log.Print(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -98,7 +101,7 @@ func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	err = app.Store.Todo.Delete(id)
+	err = app.store.Todo.Delete(id)
 	if err != nil {
 		log.Print(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -109,6 +112,9 @@ func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	port := ":5174"
+
+    logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+
 	mux := http.NewServeMux()
 
 	db, err := openDB("./data/sqlite.db")
@@ -117,7 +123,8 @@ func main() {
 	}
 
 	app := &application{
-		Store: store.NewStore(db),
+        logger: logger,
+		store: store.NewStore(db),
 	}
 
 	fileServer := http.FileServer(http.Dir("./static/"))
@@ -129,8 +136,10 @@ func main() {
 	mux.HandleFunc("PUT /switch-todo/{id}", app.switchTodo)
 	mux.HandleFunc("DELETE /todo/{id}", app.deleteTodo)
 
-	log.Printf("starting server in port: %s", port)
-	log.Fatal(http.ListenAndServe(port, mux))
+    logger.Info("starting server", "port", port)
+    err = http.ListenAndServe(port, mux)
+    logger.Error(err.Error())
+    os.Exit(1)
 }
 
 func openDB(dsn string) (*sql.DB, error) {
