@@ -24,7 +24,10 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ts.ExecuteTemplate(w, "index", todos)
+	data := TemplateData{
+		Todos: todos,
+	}
+	err = ts.ExecuteTemplate(w, "index", data)
 	if err != nil {
 		app.serverError(w, r, err)
 	}
@@ -54,7 +57,10 @@ func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ts.ExecuteTemplate(w, "todo", todo)
+	data := TemplateData{
+		Todo: todo,
+	}
+	err = ts.ExecuteTemplate(w, "todo-component", data)
 	if err != nil {
 		app.serverError(w, r, err)
 	}
