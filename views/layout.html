@@ -9,10 +9,16 @@
     <link rel="stylesheet" href="/static/css/tailwind.css" />
 </head>
 
-<body>
+<body class="mx-16">
+    <nav class="flex items-center justify-between">
+        <h1 class="text-5xl text-center mt-6 mb-10 uppercase font-bold">To-Do App</h1>
+        <ul class="flex text-xl">
+            <li class="mr-2"><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+    </nav>
     <main>
-        <h1 class="text-5xl text-center mt-6 mb-10 uppercase font-medium">To-Do App</h1>
-        {{ template "todo-list" . }}
+        {{ template "page" . }}
     </main>
     <script src="/static/js/htmx.min.js"></script>
 </body>

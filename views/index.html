@@ -1,7 +1,7 @@
-{{ block "todo-list" . }}
+{{ block "page" . }}
 <form hx-post="/todo" hx-target="#todo-list" hx-swap="afterbegin" hx-push-url="false"
     hx-on::after-request="this.reset()">
-    <div class="w-full max-w-xs mx-auto flex mb-10">
+    <div class="w-full max-w-xs flex mb-10">
         <input type="text" placeholder="..." name="new-todo"
             class="flex w-full h-10 px-3 py-2 text-sm bg-white border rounded-md border-neutral-300 ring-offset-background placeholder:text-neutral-500 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50" />
         <button
@@ -9,7 +9,7 @@
             type="submit">Add</button>
     </div>
 </form>
-<ul id="todo-list" class="flex flex-col items-center">
+<ul id="todo-list" class="flex flex-col">
     {{ range .Todos }}
     {{ template "todo" .}}
     {{ end }}

@@ -15,7 +15,7 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	files := []string{
-        "./views/layout.html",
+		"./views/layout.html",
 		"./views/index.html",
 	}
 
@@ -93,4 +93,22 @@ func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+}
+
+func (app *application) getAbout(w http.ResponseWriter, r *http.Request) {
+	files := []string{
+		"./views/layout.html",
+		"./views/about.html",
+	}
+
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	err = ts.ExecuteTemplate(w, "layout", nil)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
 }

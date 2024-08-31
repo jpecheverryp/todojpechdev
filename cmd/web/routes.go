@@ -14,5 +14,7 @@ func (app *application) routes() *http.ServeMux {
 	mux.HandleFunc("PUT /switch-todo/{id}", app.switchTodo)
 	mux.HandleFunc("DELETE /todo/{id}", app.deleteTodo)
 
+	mux.HandleFunc("GET /about", app.getAbout)
+
 	return mux
 }
