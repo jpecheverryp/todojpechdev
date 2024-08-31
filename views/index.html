@@ -24,13 +24,17 @@
     <ul id="todo-list" class="flex flex-col items-center">
         {{ range . }}
         {{ block "todo" . }}
-        <li>
-            <div id="todo-{{.ID}}" class="flex items-center mb-3">
+        <li id="todo-{{.ID}}">
+            <div  class="flex items-center mb-3">
                 <input hx-put="/switch-todo/{{.ID}}" id="checkbox-todo-{{.ID}}" type="checkbox"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-neutral-900 focus:ring-neutral-900" {{ if
                     .IsDone }}checked{{end}}>
                 <label for="checkbox-todo-{{.ID}}" class="ml-2 font-medium text-gray-900">{{.Description}} -
                     {{.CreatedAt}}</label>
+                <button type="button" hx-delete="/todo/{{.ID}}" hx-target="#todo-{{.ID}}"
+                    class="inline-flex items-center justify-center px-4 py-2 mx-4 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-neutral-950 hover:bg-neutral-900 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900 focus:shadow-outline focus:outline-none">
+                    Delete
+                </button>
             </div>
         </li>
         {{ end }}

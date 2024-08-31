@@ -77,3 +77,14 @@ func (s *TodoStore) Switch(id int) error {
 
 	return nil
 }
+
+func (s *TodoStore) Delete(id int) error {
+	stmt := `DELETE FROM todos WHERE id = ?`
+
+	_, err := s.DB.Exec(stmt, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

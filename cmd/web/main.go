@@ -91,6 +91,22 @@ func (app *application) switchTodo(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		log.Print(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	err = app.Store.Todo.Delete(id)
+	if err != nil {
+		log.Print(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
 func main() {
 	port := ":5174"
 	mux := http.NewServeMux()
@@ -111,6 +127,7 @@ func main() {
 	mux.HandleFunc("GET /", app.getIndex)
 	mux.HandleFunc("POST /todo", app.createTodo)
 	mux.HandleFunc("PUT /switch-todo/{id}", app.switchTodo)
+	mux.HandleFunc("DELETE /todo/{id}", app.deleteTodo)
 
 	log.Printf("starting server in port: %s", port)
 	log.Fatal(http.ListenAndServe(port, mux))
