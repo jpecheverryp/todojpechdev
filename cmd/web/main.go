@@ -19,8 +19,6 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	mux := http.NewServeMux()
-
 	db, err := openDB("./data/sqlite.db")
 	if err != nil {
 		log.Fatal(err)
@@ -31,17 +29,8 @@ func main() {
 		store:  store.NewStore(db),
 	}
 
-	fileServer := http.FileServer(http.Dir("./static/"))
-	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
-	//mux.Handle("GET /static/", http.FileServerFS(static.Files))
-
-	mux.HandleFunc("GET /", app.getIndex)
-	mux.HandleFunc("POST /todo", app.createTodo)
-	mux.HandleFunc("PUT /switch-todo/{id}", app.switchTodo)
-	mux.HandleFunc("DELETE /todo/{id}", app.deleteTodo)
-
 	logger.Info("starting server", "port", port)
-	err = http.ListenAndServe(port, mux)
+	err = http.ListenAndServe(port, app.routes())
 	logger.Error(err.Error())
 	os.Exit(1)
 }
