@@ -1,0 +1,21 @@
+{{ define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>To-Do App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/tailwind.css" />
+</head>
+
+<body>
+    <main>
+        <h1 class="text-5xl text-center mt-6 mb-10 uppercase font-medium">To-Do App</h1>
+        {{ template "todo-list" . }}
+    </main>
+    <script src="/static/js/htmx.min.js"></script>
+</body>
+
+</html>
+{{ end }}

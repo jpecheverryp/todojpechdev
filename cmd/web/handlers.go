@@ -15,6 +15,7 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	files := []string{
+        "./views/layout.html",
 		"./views/index.html",
 	}
 
@@ -27,7 +28,7 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 	data := TemplateData{
 		Todos: todos,
 	}
-	err = ts.ExecuteTemplate(w, "index", data)
+	err = ts.ExecuteTemplate(w, "layout", data)
 	if err != nil {
 		app.serverError(w, r, err)
 	}
