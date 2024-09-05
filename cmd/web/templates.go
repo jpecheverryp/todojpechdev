@@ -49,11 +49,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	for _, component := range components {
 		name := filepath.Base(component)
 
-		patterns := []string{
-			component,
-		}
-
-		ts, err := template.New(name).ParseFS(views.Files, patterns...)
+		ts, err := template.New(name).ParseFS(views.Files, component)
 		if err != nil {
 			return nil, err
 		}
