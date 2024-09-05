@@ -14,24 +14,11 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./views/html/layout.html",
-		"./views/html/index.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
 	data := TemplateData{
 		Todos: todos,
 	}
-	err = ts.ExecuteTemplate(w, "layout", data)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+
+	app.render(w, r, http.StatusOK, "index.html", data)
 }
 
 func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +36,7 @@ func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	files := []string{
-		"./views/html/index.html",
+		"./views/html/pages/index.html",
 	}
 
 	ts, err := template.ParseFiles(files...)
@@ -96,19 +83,5 @@ func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) getAbout(w http.ResponseWriter, r *http.Request) {
-	files := []string{
-		"./views/html/layout.html",
-		"./views/html/about.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
-	err = ts.ExecuteTemplate(w, "layout", nil)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+	app.render(w, r, http.StatusOK, "about.html", nil)
 }

@@ -1,7 +1,7 @@
 package views
 
 import (
-    "embed"
+	"embed"
 )
 
 //go:embed "html" "static"

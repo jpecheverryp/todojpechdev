@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
@@ -9,14 +10,21 @@ import (
 )
 
 type application struct {
-	logger *slog.Logger
-	store  store.Store
+	logger        *slog.Logger
+	templateCache map[string]*template.Template
+	store         store.Store
 }
 
 func main() {
 	port := ":5174"
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
 
 	db, err := openDB("./data/sqlite.db")
 	if err != nil {
@@ -25,8 +33,9 @@ func main() {
 	}
 
 	app := &application{
-		logger: logger,
-		store:  store.NewStore(db),
+		logger:        logger,
+		templateCache: templateCache,
+		store:         store.NewStore(db),
 	}
 
 	logger.Info("starting server", "port", port)
