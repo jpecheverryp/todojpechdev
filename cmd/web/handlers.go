@@ -1,7 +1,6 @@
 package main
 
 import (
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -14,9 +13,8 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := TemplateData{
-		Todos: todos,
-	}
+	data := app.newTemplateData()
+	data.Todos = todos
 
 	app.render(w, r, http.StatusOK, "index.html", data)
 }
@@ -35,23 +33,9 @@ func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./views/html/pages/index.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
-	data := TemplateData{
-		Todo: todo,
-	}
-	err = ts.ExecuteTemplate(w, "todo-component", data)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+	data := app.newTemplateData()
+	data.Todo = todo
+    app.renderComponent(w, r, http.StatusOK, "todo-component.html", data)
 }
 
 func (app *application) switchTodo(w http.ResponseWriter, r *http.Request) {
@@ -83,5 +67,6 @@ func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) getAbout(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, http.StatusOK, "about.html", nil)
+	data := app.newTemplateData()
+	app.render(w, r, http.StatusOK, "about.html", data)
 }
