@@ -15,8 +15,8 @@ func (app *application) getIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	files := []string{
-		"./views/layout.html",
-		"./views/index.html",
+		"./views/html/layout.html",
+		"./views/html/index.html",
 	}
 
 	ts, err := template.ParseFiles(files...)
@@ -49,7 +49,7 @@ func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	files := []string{
-		"./views/index.html",
+		"./views/html/index.html",
 	}
 
 	ts, err := template.ParseFiles(files...)
@@ -97,8 +97,8 @@ func (app *application) deleteTodo(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) getAbout(w http.ResponseWriter, r *http.Request) {
 	files := []string{
-		"./views/layout.html",
-		"./views/about.html",
+		"./views/html/layout.html",
+		"./views/html/about.html",
 	}
 
 	ts, err := template.ParseFiles(files...)

@@ -1,13 +1,15 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"todo.jpech.dev/views"
+)
 
 func (app *application) routes() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	fileServer := http.FileServer(http.Dir("./static/"))
-	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
-	//mux.Handle("GET /static/", http.FileServerFS(static.Files))
+	mux.Handle("GET /static/", http.FileServerFS(views.Files))
 
 	mux.HandleFunc("GET /", app.getIndex)
 	mux.HandleFunc("POST /todo", app.createTodo)
