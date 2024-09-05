@@ -35,7 +35,7 @@ func (app *application) createTodo(w http.ResponseWriter, r *http.Request) {
 
 	data := app.newTemplateData()
 	data.Todo = todo
-    app.renderComponent(w, r, http.StatusOK, "todo-component.html", data)
+	app.renderComponent(w, r, http.StatusOK, "todo-component.html", data)
 }
 
 func (app *application) switchTodo(w http.ResponseWriter, r *http.Request) {

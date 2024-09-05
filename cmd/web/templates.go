@@ -85,7 +85,6 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 	buf.WriteTo(w)
 }
 
-
 func (app *application) renderComponent(w http.ResponseWriter, r *http.Request, status int, component string, data templateData) {
 	ts, ok := app.templateCache[component]
 	if !ok {
