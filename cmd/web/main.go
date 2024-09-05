@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -21,7 +20,8 @@ func main() {
 
 	db, err := openDB("./data/sqlite.db")
 	if err != nil {
-		log.Fatal(err)
+		logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 	app := &application{
